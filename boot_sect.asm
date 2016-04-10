@@ -1,29 +1,27 @@
-org 0x7c00
+[org 0x7c00]
 	
 mov ah, 0x0e
 
 mov bp, 0x8000			;Set up stack, with enough room to grow downwards
 mov sp, bp
 
-push 'A'				;Push data onto stack
-push 'B'
-push 'C'
+mov bx, STRING
+call print
 
-pop bx					;Pop data off stack and move the low half of bx (bl) to al,
-mov al, bl				; since al is 8 bits (for ascii)
-int 0x10
-
-pop bx
-mov al, bl
-int 0x10
-
-pop bx
-mov al, bl
-int 0x10
-
+mov bx, SECOND_STRING
+call print
 	
 jmp $					;Jump to current position and loop forever
 
+%include "print.asm"
+
+;Data
+STRING:
+	db 'hello, world! ', 0
+	
+SECOND_STRING:
+	db 'THIS ACTUALLY WORKS WHAT ', 0
+	
 times 510-($-$$) db 0	;Repeat 0x00 510-(the amount of space already used)
 						; to pad the file with 0s until the magic number
 
