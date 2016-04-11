@@ -5,13 +5,13 @@ mov sp, bp
 
 mov bx, REAL_MODE_MSG
 call print_string
-call switch_to_pm
+;call switch_to_pm
 jmp $						;Jump to current position and loop forever
 
-%include "util\print_string.asm"
-%include "gdt\gdt.asm"
-%include "util\print_string_pm.asm"
-%include "switch_to_pm.asm"
+%include "boot/util/print_string.asm"
+%include "boot/gdt/gdt.asm"
+%include "boot/util/print_string_pm.asm"
+%include "boot/switch_to_pm.asm"
 
 BEGIN_PM:
 	mov ebx, PROT_MODE_MSG
