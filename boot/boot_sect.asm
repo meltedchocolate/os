@@ -3,6 +3,10 @@
 KERNEL_OFFSET equ 0x1000
 
 mov [BOOT_DRIVE], dl
+mov ax, 0x0
+mov ds, ax
+mov ax, 0x8000
+mov ss, ax
 
 mov bp, 0x9000			;Set up stack, with enough room to grow downwards
 mov sp, bp
