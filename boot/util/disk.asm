@@ -11,7 +11,6 @@ disk_load:
 	int 0x13
 	
 	jc disk_error
-	
 	pop dx
 	cmp dh, al
 	jne disk_error
