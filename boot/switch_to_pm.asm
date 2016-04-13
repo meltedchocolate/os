@@ -1,21 +1,27 @@
 [bits 16]
+; switch to protected mode
+
 switch_to_pm:
-	cli
-	lgdt [gdt_descriptor]
-	mov eax, cr0
-	or eax, 0x1
-	mov cr0, eax
-	jmp CODE_SEG:init_pm  	; THIS IS WHERE THE PROBLEM IS!
+  cli                           ; disable interrupts
+  lgdt [gdt_descriptor]         ; Load the gdt
+
+  mov eax, cr0                  ; Set the first bit of the relevant control register
+  or eax, 0x1
+  mov cr0, eax
+
+  jmp CODE_SEG:init_pm          ; far jump to force cpu to finish executing real-mode instructions
 
 [bits 32]
+; initialize registers and the stack once in protected mode
 init_pm:
-	jmp $
-	mov ax, DATA_SEG ; Now in PM , our old segments are meaningless ,
-	mov ds, ax ; so we point our segment registers to the
-	mov ss, ax ; data selector we defined in our GDT
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	mov ebp, 0x90000 ; Update our stack position so it is right
-	mov esp, ebp ; at the top of the free space.
-	call BEGIN_PM ; Finally , call some well - known label
+  mov ax, DATA_SEG              ; use the data segment defined in the gdt
+  mov ds, ax
+  mov ss, ax
+  mov es, ax
+  mov fs, ax
+  mov gs, ax
+
+  mov ebp, 0x90000              ; move stack position to the top of the free space
+  mov esp, ebp
+
+  jmp BEGIN_PM
